@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./log.css">
+</head>
+<body>
+  <div class="form">
+  <form action="/signup" method="post" enctype="multipart/form-data" class="form-horizontal signup">
+    <div class="form-wrap" style="position: relative;">
+      <h2>Sign Up</h2>
+
+      <div class="form-group">
+        <!-- <label for="email">Username:</label> -->
+        <div class="relative">
+          <input class="form-control" id="email" type="text" required="" autofocus="" title="" autocomplete="" placeholder="Email Address">
+          <i class="fa fa-envelope"></i>
+        </div>
+      </div>
+      <div class="form-group">
+        <!-- <label for="email">Username:</label> -->
+        <div class="relative">
+          <input class="form-control" id="username" type="text" required="" autofocus="" title="" autocomplete="" placeholder="Username">
+          <i class="fa fa-user"></i>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <!-- <label for="email">Password:</label> -->
+        <div class="relative">
+          <input id="password" class="form-control" type="password" required="" placeholder="Password">
+          <i class="fa fa-key"></i>
+        </div>
+      </div> 
+      <div class="form-group">
+        <!-- <label for="email">Password:</label> -->
+        <div class="relative">
+          <input id="cfpassword" class="form-control" type="password" required="" placeholder="Confirm Password">
+          <i class="fa fa-key"></i>
+        </div>
+      </div> 
+               
+      <div class="login-btn">
+        <a href="#"><button class="movebtn movebtnsu" type="Submit">Submit <i class="fa fa-fw fa-paper-plane"></i></button></a>
+        <div class="relative"><hr><span class="login-text">or SignUP with</span></div>
+					<div class="clearfix"></div>
+					<div class="social-btn clearfix">
+						<a href="#"><button class="movebtn google" type="Submit">Google <i class="fa fa-fw fa-google"></i></button></a>
+						<a href="#"><button class="movebtn facebook" type="Submit">Facebook <i class="fa fa-fw fa-facebook"></i></button></a>
+					</div>
+      </div>
+      
+    </div>
+    <div class="sign-up">
+      <a href="./log.html" class="signbtn"><small>Already member? Sign in <i>(Click me)</i></small></a>
+    </div>
+  </form>
+  </div>
+  <script src="./log.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.signup');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const cfpassword = document.getElementById('cfpassword').value;
+        if(localStorage.getItem('medico')){
+            window.location.href='/';
+            return;
+        }
+        if (password !== cfpassword) {
+            alert("Passwords do not match");
+            return;
+        }
+        if (password.length < 6) {
+            alert("Password should be at least 6 characters long");
+            return;
+        }
+        fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, username, password })
+        }).then((response) => {
+            console.log(response);
+            if (response.ok) {
+                alert("Signup Successful");
+                localStorage.setItem('medico', username);
+                window.location.href = '/';
+            } else if (response.status == 409) {
+                alert("User Already Exists");
+                window.location.href = './log.html';
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
+});
+
+  </script>
+</body>
+</html>
